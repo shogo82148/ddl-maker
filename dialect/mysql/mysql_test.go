@@ -43,12 +43,25 @@ func TestToSQL(t *testing.T) {
 		t.Fatalf("error %s to sql %s. but result %s", "sql.NullString", fmt.Sprintf("VARCHAR(%d)", size), m.ToSQL("sql.NullString", size))
 	}
 
+	if m.ToSQL("[]uint8", size) != fmt.Sprintf("VARBINARY(%d)", size) {
+		t.Fatalf("error %s to sql %s. but result %s", "[]uint8", fmt.Sprintf("VARBINARY(%d)", size), m.ToSQL("[]uint8", size))
+	}
+
+	if m.ToSQL("sql.RawBytes", size) != fmt.Sprintf("VARBINARY(%d)", size) {
+		t.Fatalf("error %s to sql %s. but result %s", "sql.RawBytes", fmt.Sprintf("VARBINARY(%d)", size), m.ToSQL("sql.RawBytes", size))
+	}
+
 	if m.ToSQL("text", 0) != "TEXT" {
 		t.Fatalf("error %s to sql %s. but result %s", "text", "TEXT", m.ToSQL("text", 0))
 	}
 
 	if m.ToSQL("time", 0) != "TIME" {
-		t.Fatalf("error %s to sql %s. but result %s", "time", "TIME", m.ToSQL("type", 0))
+		t.Fatalf("error %s to sql %s. but result %s", "time", "TIME", m.ToSQL("time", 0))
+	}
+
+	// https://godoc.org/github.com/go-sql-driver/mysql#NullTime
+	if m.ToSQL("mysql.NullTime", 0) != "DATETIME" {
+		t.Fatalf("error %s to sql %s. but result %s", "mysql.NullTime", "DATETIME", m.ToSQL("mysql.NullTime", 0))
 	}
 }
 
