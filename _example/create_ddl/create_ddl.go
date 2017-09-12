@@ -5,7 +5,7 @@ import (
 	"log"
 
 	"github.com/kayac/ddl-maker"
-	ex "github.com/kayac/ddl-maker/_example"
+	ex "github.com/shogo82148/ddl-maker/_example"
 )
 
 func main() {
