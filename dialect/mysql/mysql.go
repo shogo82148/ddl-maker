@@ -35,6 +35,12 @@ type PrimaryKey struct {
 	columns []string
 }
 
+// FullTextIndex XXX
+type FullTextIndex struct {
+	columns []string
+	name    string
+}
+
 // HeaderTemplate XXX
 func (mysql MySQL) HeaderTemplate() string {
 	return `SET foreign_key_checks=0;
@@ -183,6 +189,27 @@ func (pk PrimaryKey) ToSQL() string {
 	return fmt.Sprintf("PRIMARY KEY (%s)", strings.Join(columnsStr, ", "))
 }
 
+// Name XXX
+func (i FullTextIndex) Name() string {
+	return i.name
+}
+
+// Columns XXX
+func (i FullTextIndex) Columns() []string {
+	return i.columns
+}
+
+// ToSQL return index sql string
+func (i FullTextIndex) ToSQL() string {
+	var columnsStr []string
+
+	for _, c := range i.columns {
+		columnsStr = append(columnsStr, quote(c))
+	}
+
+	return fmt.Sprintf("FULLTEXT %s (%s)", quote(i.name), strings.Join(columnsStr, ", "))
+}
+
 // AddIndex XXX
 func AddIndex(idxName string, columns ...string) Index {
 	return Index{
@@ -202,6 +229,14 @@ func AddUniqueIndex(idxName string, columns ...string) UniqueIndex {
 // AddPrimaryKey XXX
 func AddPrimaryKey(columns ...string) PrimaryKey {
 	return PrimaryKey{
+		columns: columns,
+	}
+}
+
+// AddFullTextIndex XXX
+func AddFullTextIndex(idxName string, columns ...string) FullTextIndex {
+	return FullTextIndex{
+		name:    idxName,
 		columns: columns,
 	}
 }

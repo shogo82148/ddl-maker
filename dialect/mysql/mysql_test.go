@@ -119,3 +119,14 @@ func TestAddPrimaryKey(t *testing.T) {
 		t.Fatal("[error] parse primary key", pk.ToSQL())
 	}
 }
+func TestAddFullTextIndex(t *testing.T) {
+	fullTextIndex := AddFullTextIndex("body_idx", "body")
+	if fullTextIndex.ToSQL() != "FULLTEXT `body_idx` (`body`)" {
+		t.Fatal("[error] parse fulltext body_idx", fullTextIndex.ToSQL())
+	}
+
+	fullTextIndex = AddFullTextIndex("title_body_idx", "title", "body")
+	if fullTextIndex.ToSQL() != "FULLTEXT `title_body_idx` (`title`, `body`)" {
+		t.Fatal("[error] parse fulltext title_body_idx", fullTextIndex.ToSQL())
+	}
+}
